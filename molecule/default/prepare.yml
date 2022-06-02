@@ -1,0 +1,16 @@
+---
+- name: Prepare
+  hosts: all
+
+  tasks:
+    - name: Configure NIC to promiscuous mode
+      command: ip link set eth0 promisc on
+      become: yes
+
+    - name: Install pre-reqs
+      apt:
+        name: '{{ item }}'
+        state: present
+        update_cache: yes
+      loop:
+        - dirmngr

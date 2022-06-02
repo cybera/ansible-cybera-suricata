@@ -1,0 +1,15 @@
+---
+- name: Update Suricata Rules
+  command:
+    cmd: /usr/bin/suricata-update
+  when: not ansible_check_mode
+
+- name: Restart Suricata
+  systemd:
+    state: restarted
+    name: suricata
+  when: not ansible_check_mode
+
+- name: Reload Suricata
+  shell: 'kill -USR2 $(pidof suricata)'
+  when: not ansible_check_mode

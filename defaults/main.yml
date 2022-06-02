@@ -1,0 +1,58 @@
+# The interface that you wish to have Suricata analyse the traffic of. Ensure that it is set to promiscuous mode
+# 'ip link set eth0 promisc on' Change interfaces/netplan file for change to persist.
+capture_interface: eth0
+
+# To target specifc CIDR ranges for insepction, it will accept a list of ranges or use /32 for a single IP address.
+member_prefixes:
+  - 0.0.0.0/0
+
+# member_prefixes:
+#   - 192.168.1.0/24
+#   - 10.0.0.1/32
+
+# Suricata public rule sources to include other than the standard oisf/default rule source
+suricata_rule_sources:
+  - et/open
+  - oisf/trafficid
+  - sslbl/ssl-fp-blacklist
+  - sslbl/ja3-fingerprints
+  - tgreen/hunting
+
+# Which rules sources to exclude
+suricata_rule_sources_disabled: []
+# suricata_rule_sources_disabled:
+#   - etnetera/aggressive
+
+# Enable custom rule lists
+suricata_rules_enabled: []
+# suricata_rules_enabled:
+#   - /path/to/local.rules
+
+# Disable rules, using the pid or group of the rule. (Rule sources do not overlap/re-use pids.)
+suricata_rules_disabled: []
+# Below are rules that we've found to create a lot of 'noise'. Please investigate whether disabling them is actually a good idea for your organization.
+# suricata_rules_disabled:
+#   - 2016149
+#   - 2016150
+#   - 2018904
+#   - 2018905
+#   - 2018906
+#   - 2018907
+#   - 2018908
+#   - 2033077
+#   - 2033078
+#   - 2003068
+#   - 2036220
+#   - 2260005
+#   - 2260004
+#   - 2031071
+#   - 2100366
+#   - 2260002
+#   - 2035465
+#   - 2025275
+#   - 2013504
+#   - 2008986
+#   - 2021701
+#   - 2025133
+#   - 2027390
+#   - group:stream-events.rules

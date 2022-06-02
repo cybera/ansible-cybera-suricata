@@ -1,0 +1,26 @@
+- name: Copy scripts that update suricata rules and DB's rule table
+  copy:
+    src: update_suricata_rules.sh
+    dest: "/usr/local/bin/update_suricata_rules.sh"
+    group: root
+    owner: root
+    mode: 0755
+
+- name: Managing suricata rule update cron job
+  cron:
+    name: 'Update suricata rules'
+    minute: '30'
+    hour: '6'
+    day: '*'
+    month: '*'
+    weekday: '*'
+    job: "/usr/local/bin/update_suricata_rules.sh > /dev/null 2>&1"
+    user: root
+
+- name: Manage logrotate config
+  copy:
+    src: suricata_logrotate_config
+    dest: /etc/logrotate.d/suricata
+    owner: root
+    group: root
+    mode: 0644

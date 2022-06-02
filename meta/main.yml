@@ -1,0 +1,14 @@
+---
+
+galaxy_info:
+  author: cybera
+  role_name: cybera_suricata
+  description: Installation and configuration of Suricata IDS software
+  company: Cybera
+  license: MIT
+  min_ansible_version: 2.10
+  platforms:
+    - name: Ubuntu
+      versions: [18.04]
+  galaxy_tags: []
+dependencies: []

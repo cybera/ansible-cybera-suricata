@@ -1,0 +1,8 @@
+- name: Manage Suricata PPA
+  apt_repository:
+    repo: ppa:oisf/suricata-stable
+
+- name: Manage Suricata package
+  package:
+    name: suricata
+    state: present

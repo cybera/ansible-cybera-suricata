@@ -1,0 +1,10 @@
+---
+- name: Converge
+  hosts: all
+  tasks:
+    - name: Include test data
+      include_vars: vars.yml
+
+    - name: Include ansible-cybera-suricata role
+      include_role:
+        name: "ansible-cybera-suricata"

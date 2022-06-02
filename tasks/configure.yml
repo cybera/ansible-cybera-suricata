@@ -1,0 +1,60 @@
+- name: Manage the suricata.yaml config file
+  template:
+    src: suricata.yaml.j2
+    dest: /etc/suricata/suricata.yaml
+    owner: root
+    group: root
+    mode: 0640
+  notify:
+    - Update Suricata Rules
+    - Restart Suricata
+
+- name: Get current list of enabled rule sources
+  command:
+    cmd: /usr/bin/suricata-update list-enabled-sources
+  register: suricata_sources
+  when: not ansible_check_mode
+
+- name: Manage enabled rule sources
+  command:
+    cmd: /usr/bin/suricata-update enable-source {{ item }}
+  loop: "{{ suricata_rule_sources }}"
+  when:
+    - suricata_sources is not skipped
+    - item not in suricata_sources
+  notify:
+    - Update Suricata Rules
+    - Reload Suricata
+
+- name: Manage disabled rule sources
+  command:
+    cmd: /usr/bin/suricata-update disable-source {{ item }}
+  loop: "{{ suricata_rule_sources_disabled }}"
+  when:
+    - suricata_sources is not skipped
+    - item in suricata_sources.stdout
+  notify:
+    - Update Suricata Rules
+    - Restart Suricata
+
+- name: Manage custom enabled rules
+  copy:
+    content: "{{ suricata_rules_enabled | join('\n') }}\n"
+    dest: /etc/suricata/enable.conf
+    owner: root
+    group: root
+    mode: 0640
+  notify:
+    - Update Suricata Rules
+    - Restart Suricata
+
+- name: Manage custom disabled rules
+  copy:
+    content: "{{ suricata_rules_disabled | join('\n') }}\n"
+    dest: /etc/suricata/disable.conf
+    owner: root
+    group: root
+    mode: 0640
+  notify:
+    - Update Suricata Rules
+    - Restart Suricata

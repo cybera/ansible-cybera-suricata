@@ -1,0 +1,71 @@
+---
+- name: Verify
+  hosts: all
+  gather_facts: true
+  tasks:
+    - name: Include test data
+      include_vars: vars.yml
+
+    - name: Stat suricata path
+      stat:
+        path: /usr/bin/suricata
+      register: suricata_path
+
+    - name: Verify that suricata binary is present
+      assert:
+        that:
+          - suricata_path.stat.exists
+
+    - name: Stat suricata config path
+      stat:
+        path: /etc/suricata/suricata.yaml
+      register: suricata_config_path
+
+    - name: Verify that suricata binary is present
+      assert:
+        that:
+          - suricata_config_path.stat.exists
+
+    - name: Stat eve.json log
+      stat:
+        path: /var/log/suricata/eve.json
+      register: eve_json_path
+
+    - name: Verify that eve.json is being appended to
+      assert:
+        that:
+          - eve_json_path.stat.exists
+          - eve_json_path.stat.size > 300
+
+    - name: Stat suricata logrotate config
+      stat:
+        path: /etc/logrotate.d/suricata
+      register: suricata_logrotate_path
+
+    - name: Verify that logrotate config is present
+      assert:
+        that:
+          - suricata_logrotate_path.stat.exists
+
+    - name: Stat root cron tab
+      stat:
+        path: /var/spool/cron/crontabs/root
+      register: crontab_path
+
+    - name: Verify that suricata-update cron job exists
+      assert:
+        that:
+          - crontab_path.stat.exists
+
+    - name: Stat suricata_update script
+      stat:
+        path: /usr/local/bin/update_suricata_rules.sh
+      register: suricata_update_path
+
+    - name: Verify that suricata-update cron script exists
+      assert:
+        that:
+          - suricata_update_path.stat.exists
+
+
+
